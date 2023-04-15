@@ -1,4 +1,4 @@
-module github.com/andrewrynhard-audio/streamdeck-go-sdk
+module github.com/scryner/streamdeck-go-sdk
 
 go 1.19
 

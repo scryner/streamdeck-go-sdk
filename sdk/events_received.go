@@ -12,7 +12,9 @@ const (
 	EventKeyDown                 = "keyDown"
 	EventKeyUp                   = "keyUp"
 	EventTouchTap                = "touchTap"
-	EventDialPress               = "dialPress"
+	EventDialPress               = "dialPress" // deprecated
+	EventDialUp                  = "dialUp"
+	EventDialDown                = "dialDown"
 	EventDialRotate              = "dialRotate"
 	EventWillAppear              = "willAppear"
 	EventWillDisappear           = "willDisappear"
@@ -67,6 +69,29 @@ func (g *EventEnvelope) UnmarshalJSON(data []byte) error {
 		g.Path = fmt.Sprintf("%s/%s", event.Action, event.Event)
 
 		g.Event = event
+
+	case EventDialUp:
+		event := &DialEvent{}
+
+		if err := json.Unmarshal(data, event); err != nil {
+			return err
+		}
+
+		g.Path = fmt.Sprintf("%s/%s", event.Action, event.Event)
+
+		g.Event = event
+
+	case EventDialDown:
+		event := &DialEvent{}
+
+		if err := json.Unmarshal(data, event); err != nil {
+			return err
+		}
+
+		g.Path = fmt.Sprintf("%s/%s", event.Action, event.Event)
+
+		g.Event = event
+
 	case EventDialRotate:
 		event := &DialRotateEvent{}
 
@@ -133,6 +158,21 @@ type DialPressEvent struct {
 			Row    int `json:"row,omitempty"`
 		} `json:"coordinates,omitempty"`
 		Pressed bool `json:"pressed,omitempty"`
+	} `json:"payload,omitempty"`
+}
+
+type DialEvent struct {
+	Action  string `json:"action,omitempty"`
+	Event   string `json:"event,omitempty"`
+	Context string `json:"context,omitempty"`
+	Device  string `json:"device,omitempty"`
+	Payload struct {
+		Controller  string      `json:"controller,omitempty"`
+		Settings    interface{} `json:"settings,omitempty"`
+		Coordinates struct {
+			Column int `json:"column,omitempty"`
+			Row    int `json:"row,omitempty"`
+		} `json:"coordinates,omitempty"`
 	} `json:"payload,omitempty"`
 }
 

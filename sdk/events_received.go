@@ -59,6 +59,7 @@ func (g *EventEnvelope) UnmarshalJSON(data []byte) error {
 		g.Path = fmt.Sprintf("%s/%s", event.Action, event.Event)
 
 		g.Event = event
+
 	case EventDialPress:
 		event := &DialPressEvent{}
 
@@ -102,6 +103,7 @@ func (g *EventEnvelope) UnmarshalJSON(data []byte) error {
 		g.Path = fmt.Sprintf("%s/%s", event.Action, event.Event)
 
 		g.Event = event
+
 	case EventWillAppear:
 		event := &WillAppearEvent{}
 
@@ -112,7 +114,18 @@ func (g *EventEnvelope) UnmarshalJSON(data []byte) error {
 		g.Path = fmt.Sprintf("%s/%s", event.Action, event.Event)
 
 		g.Event = event
-	// case EventWillDisappear:
+
+	case EventWillDisappear:
+		event := &WillDisappearEvent{}
+
+		if err := json.Unmarshal(data, event); err != nil {
+			return err
+		}
+
+		g.Path = fmt.Sprintf("%s/%s", event.Action, event.Event)
+
+		g.Event = event
+
 	// case EventTitleParametersDidChang:
 	// case EventDeviceDidConnect:
 	// case EventDeviceDidDisconnect:
@@ -193,6 +206,23 @@ type DialRotateEvent struct {
 }
 
 type WillAppearEvent struct {
+	Action  string `json:"action,omitempty"`
+	Event   string `json:"event,omitempty"`
+	Context string `json:"context,omitempty"`
+	Device  string `json:"device,omitempty"`
+	Payload struct {
+		Controller  string      `json:"controller,omitempty"`
+		Settings    interface{} `json:"settings,omitempty"`
+		Coordinates struct {
+			Column int `json:"column,omitempty"`
+			Row    int `json:"row,omitempty"`
+		} `json:"coordinates,omitempty"`
+		State           int  `json:"state,omitempty"`
+		IsInMultiAction bool `json:"isInMultiAction,omitempty"`
+	} `json:"payload,omitempty"`
+}
+
+type WillDisappearEvent struct {
 	Action  string `json:"action,omitempty"`
 	Event   string `json:"event,omitempty"`
 	Context string `json:"context,omitempty"`

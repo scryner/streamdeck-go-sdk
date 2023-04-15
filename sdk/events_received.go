@@ -126,9 +126,29 @@ func (g *EventEnvelope) UnmarshalJSON(data []byte) error {
 
 		g.Event = event
 
+	case EventDeviceDidConnect:
+		event := &DeviceDidConnectEvent{}
+
+		if err := json.Unmarshal(data, event); err != nil {
+			return err
+		}
+
+		g.Path = fmt.Sprintf("%s", event.Event)
+
+		g.Event = event
+
+	case EventDeviceDidDisconnect:
+		event := &DeviceDidDisconnectEvent{}
+
+		if err := json.Unmarshal(data, event); err != nil {
+			return err
+		}
+
+		g.Path = fmt.Sprintf("%s", event.Event)
+
+		g.Event = event
+
 	// case EventTitleParametersDidChang:
-	// case EventDeviceDidConnect:
-	// case EventDeviceDidDisconnect:
 	// case EventApplicationDidLaunch:
 	// case EventApplicationDidTerminate:
 	// case EventSystemDidWakeUp:
@@ -237,4 +257,22 @@ type WillDisappearEvent struct {
 		State           int  `json:"state,omitempty"`
 		IsInMultiAction bool `json:"isInMultiAction,omitempty"`
 	} `json:"payload,omitempty"`
+}
+
+type DeviceDidConnectEvent struct {
+	Event      string `json:"event,omitempty"`
+	Device     string `json:"device,omitempty"`
+	DeviceInfo struct {
+		Name string `json:"name,omitempty"`
+		Type int    `json:"type,omitempty"`
+		Size struct {
+			Columns int `json:"columns,omitempty"`
+			Rows    int `json:"rows,omitempty"`
+		} `json:"size,omitempty"`
+	} `json:"deviceInfo,omitempty"`
+}
+
+type DeviceDidDisconnectEvent struct {
+	Event  string `json:"event,omitempty"`
+	Device string `json:"device,omitempty"`
 }
